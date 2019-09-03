@@ -1,0 +1,16 @@
+syntax = "proto2";
+option java_package = "com.example.nettylib.proto";
+option java_outer_classname = "HeartBeatData";
+//心跳
+message HeartBeat {
+    optional int64 time=1;
+}
+
+message ProtoEvent {
+    optional int64 time = 1;
+    optional int64 event = 2;
+    optional string message = 3;
+    optional int64 what1 = 4;
+    optional int64 what2 = 5;
+    optional string json = 6;
+}

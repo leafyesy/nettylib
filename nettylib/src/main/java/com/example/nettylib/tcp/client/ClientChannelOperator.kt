@@ -1,0 +1,18 @@
+package com.example.nettylib.tcp.client
+
+import com.google.protobuf.MessageLite
+import io.netty.channel.ChannelHandlerContext
+import io.netty.channel.ChannelPipeline
+import io.netty.util.concurrent.Future
+
+abstract class ClientChannelOperator {
+    abstract fun hasConnect(channelHandlerContext: ChannelHandlerContext)
+    abstract fun hasDisconnect(channelHandlerContext: ChannelHandlerContext)
+    abstract fun onReadData(channelHandlerContext: ChannelHandlerContext, data: MessageLite)
+    abstract fun isConnect(): Boolean
+
+    @Throws(Exception::class)
+    abstract fun send(messageLite: MessageLite): Future<*>?
+
+    fun handleChannelPipeline(channelPipeline: ChannelPipeline) {}
+}
