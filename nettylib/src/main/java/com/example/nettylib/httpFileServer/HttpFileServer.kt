@@ -1,4 +1,4 @@
-package com.example.nettylib.HttpFileServer
+package com.example.nettylib.httpFileServer
 
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelFuture

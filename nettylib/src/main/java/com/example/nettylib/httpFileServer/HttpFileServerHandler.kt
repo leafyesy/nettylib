@@ -1,4 +1,4 @@
-package com.example.nettylib.HttpFileServer
+package com.example.nettylib.httpFileServer
 
 import android.text.TextUtils
 import android.util.Log

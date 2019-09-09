@@ -1,4 +1,4 @@
-package com.example.nettylib.HttpFileServer
+package com.example.nettylib.httpFileServer
 
 import io.netty.handler.codec.http.HttpRequest
 

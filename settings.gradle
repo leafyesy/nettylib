@@ -1,1 +1,1 @@
-include ':app', ':nettylib'
+include ':app', ':nettylib', ':extlib', ':nettyserver','hermes','hermes-eventbus'

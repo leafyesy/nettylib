@@ -16,7 +16,7 @@ import io.netty.util.internal.logging.InternalLoggerFactory
 import io.netty.util.internal.logging.JdkLoggerFactory
 import java.util.concurrent.TimeUnit
 
-class TcpProtobufClient : ClientChannelOperator() {
+open class TcpProtobufClient : ClientChannelOperator() {
     /**
      * 判断是否连接
      * @return
