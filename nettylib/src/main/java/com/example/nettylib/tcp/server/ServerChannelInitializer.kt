@@ -1,6 +1,6 @@
 package com.example.nettylib.tcp.server
 
-import com.example.nettylib.ConnectorIdleStateTrigger
+import com.example.nettylib.adapter.ConnectorIdleStateTrigger
 import com.example.nettylib.tcp.Config
 import com.example.nettylib.tcp.CustomProtobufDecoder
 import com.example.nettylib.tcp.CustomProtobufEncoder

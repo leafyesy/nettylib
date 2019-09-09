@@ -7,7 +7,7 @@ import io.netty.channel.ChannelPipeline
 import java.util.ArrayList
 import java.util.concurrent.CopyOnWriteArrayList
 
-abstract class ServerChannelOperator() {
+open abstract class ServerChannelOperator() {
     private var channelList: CopyOnWriteArrayList<ChannelHandlerContext> = CopyOnWriteArrayList()
 
     /**
@@ -72,7 +72,7 @@ abstract class ServerChannelOperator() {
      * 子类重写后处理handler链
      * @param channelPipeline
      */
-    fun handleChannelPipeline(channelPipeline: ChannelPipeline) {
+    open fun handleChannelPipeline(channelPipeline: ChannelPipeline) {
 
     }
 
@@ -80,7 +80,7 @@ abstract class ServerChannelOperator() {
      * 子类重写处理连接成功
      * @param channelHandlerContext
      */
-    fun onChannelConnect(channelHandlerContext: ChannelHandlerContext) {
+    open fun onChannelConnect(channelHandlerContext: ChannelHandlerContext) {
 
     }
 
@@ -88,7 +88,7 @@ abstract class ServerChannelOperator() {
      * 子类重写处理连接失败
      * @param channelHandlerContext
      */
-    fun onChannelDisconnect(channelHandlerContext: ChannelHandlerContext) {
+    open fun onChannelDisconnect(channelHandlerContext: ChannelHandlerContext) {
 
     }
 

@@ -44,11 +44,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    testApi 'junit:junit:4.12'
+    api "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
     //compile 'com.android.support:appcompat-v7:23.3.0'
-    implementation 'com.google.code.gson:gson:2.5'
+    api 'com.google.code.gson:gson:2.5'
 }
 
 //apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'

@@ -11,7 +11,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.util.internal.logging.InternalLoggerFactory
 import io.netty.util.internal.logging.JdkLoggerFactory
 
-class TcpProtobufServer : ServerChannelOperator() {
+open class TcpProtobufServer : ServerChannelOperator() {
     private var bossGroup: EventLoopGroup? = null
     private var workerGroup: EventLoopGroup? = null
     var prototype: MessageLite? = null
@@ -66,4 +66,5 @@ class TcpProtobufServer : ServerChannelOperator() {
     override fun onReadData(channelHandlerContext: ChannelHandlerContext, messageLite: MessageLite) {
 
     }
+
 }

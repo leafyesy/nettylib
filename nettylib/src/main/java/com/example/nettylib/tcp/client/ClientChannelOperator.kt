@@ -14,5 +14,5 @@ abstract class ClientChannelOperator {
     @Throws(Exception::class)
     abstract fun send(messageLite: MessageLite): Future<*>?
 
-    fun handleChannelPipeline(channelPipeline: ChannelPipeline) {}
+    open fun handleChannelPipeline(channelPipeline: ChannelPipeline) {}
 }

@@ -43,14 +43,14 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    testApi 'junit:junit:4.12'
     //implementation 'com.android.support:appcompat-v7:23.3.0'
-    implementation "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
-    implementation 'org.greenrobot:eventbus:3.0.0'
+    api "androidx.appcompat:appcompat:$rootProject.supportLibraryVersion"
+    api 'org.greenrobot:eventbus:3.0.0'
     //compile 'xiaofei.library:hermes:0.7.0'
-    implementation 'xiaofei.library:concurrent-utils:0.1.4'
-    implementation project(':hermes')
+    api 'xiaofei.library:concurrent-utils:0.1.4'
+    api project(':hermes')
 
 }
 

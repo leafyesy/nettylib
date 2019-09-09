@@ -1,4 +1,4 @@
-package com.example.nettylib
+package com.example.nettylib.adapter
 
 import com.example.nettylib.proto.HeartBeatData
 import io.netty.channel.ChannelHandlerContext

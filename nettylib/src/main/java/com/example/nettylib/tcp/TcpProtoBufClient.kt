@@ -1,6 +1,6 @@
 package com.example.nettylib.tcp
 
-import com.example.nettylib.ConnectorIdleStateTrigger
+import com.example.nettylib.adapter.ConnectorIdleStateTrigger
 import com.example.nettylib.tcp.client.ClientChannelOperator
 import com.example.nettylib.tcp.client.ClientConnectionHandler
 import com.example.nettylib.tcp.client.ClientDataHandler
@@ -16,7 +16,7 @@ import io.netty.util.internal.logging.InternalLoggerFactory
 import io.netty.util.internal.logging.JdkLoggerFactory
 import java.util.concurrent.TimeUnit
 
-open class TcpProtobufClient : ClientChannelOperator() {
+open class TcpProtoBufClient : ClientChannelOperator() {
     /**
      * 判断是否连接
      * @return
@@ -68,9 +68,9 @@ open class TcpProtobufClient : ClientChannelOperator() {
                         CustomProtobufEncoder(),
                         IdleStateHandler(Config.READ_IDLE_TIME, Config.WRITE_IDLE_TIME, 0, TimeUnit.SECONDS),
                         idleStateTrigger,
-                        ClientConnectionHandler(this@TcpProtobufClient),
+                        ClientConnectionHandler(this@TcpProtoBufClient),
                         CustomProtobufDecoder(prototype),
-                        ClientDataHandler(this@TcpProtobufClient)
+                        ClientDataHandler(this@TcpProtoBufClient)
                     )
                     handleChannelPipeline(channelPipeline)
                 }
@@ -111,14 +111,17 @@ open class TcpProtobufClient : ClientChannelOperator() {
 
 
     /**
-     * 给子类重写监听链路连接状态
+     * 给子类重写 连接成功
      */
-    fun onConnect() {}
-
-    fun onDisconnect() {}
+    open fun onConnect() {}
 
     /**
-     * 子类重写接收数据
+     * 子类重新 断开连接
+     */
+    open fun onDisconnect() {}
+
+    /**
+     * 子类重写 接收数据
      * @param channelHandlerContext
      * @param data
      */

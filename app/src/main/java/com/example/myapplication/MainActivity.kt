@@ -3,14 +3,12 @@ package com.example.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.extlib.onClick
-import com.example.nettylib.Constant
-import com.example.nettylib.NettyHelper
-import com.example.nettylib.TcpMessageHelper
+import com.example.nettylib.NettyClientHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val nettyHelper by lazy { NettyHelper() }
+    private val nettyHelper by lazy { NettyClientHelper(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

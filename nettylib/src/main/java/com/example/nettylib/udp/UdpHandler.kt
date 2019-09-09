@@ -66,21 +66,21 @@ open class UdpHandler : DataOperator {
      * @return
      */
     fun broadcast(data: String?, port: Int, isWifiOn: Boolean): ChannelFuture? {
-        var data = data
+        var newData = data
         if (channel == null)
             return null
         if (data == null)
-            data = "-"
+            newData = "-"
         return if (isWifiOn) {
             channel!!.writeAndFlush(
                 DatagramPacket(
-                    wrappedBuffer(data.toByteArray()),
+                    wrappedBuffer(newData!!.toByteArray()),
                     SocketUtils.socketAddress("255.255.255.255", port)
                 )
             )
         } else channel!!.writeAndFlush(
             DatagramPacket(
-                wrappedBuffer(data.toByteArray()),
+                wrappedBuffer(newData!!.toByteArray()),
                 SocketUtils.socketAddress("192.168.43.255", port)
             )
         )
@@ -94,14 +94,14 @@ open class UdpHandler : DataOperator {
      * @return
      */
     fun sendData(data: String?, port: Int, address: String): ChannelFuture? {
-        var data = data
+        var newData = data
         if (channel == null)
             return null
         if (data == null)
-            data = ""
+            newData = ""
         return channel!!.writeAndFlush(
             DatagramPacket(
-                Unpooled.wrappedBuffer(data.toByteArray()),
+                wrappedBuffer(newData!!.toByteArray()),
                 SocketUtils.socketAddress(address, port)
             )
         )
