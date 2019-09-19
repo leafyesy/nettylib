@@ -7,11 +7,12 @@ import com.example.nettylib.ssl.SecureChatSslContextFactory
 import com.example.nettylib.tcp.TcpProtoBufClient
 import com.example.nettylib.udp.UdpHandler
 import com.google.protobuf.MessageLite
+import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPipeline
 import io.netty.channel.socket.DatagramPacket
 import io.netty.handler.ssl.SslHandler
-import java.lang.Exception
+import java.nio.charset.Charset
 import java.util.concurrent.Executors
 
 open class NettyClientHelper(val context: Context) {
@@ -61,10 +62,9 @@ open class NettyClientHelper(val context: Context) {
                         .createSSLEngine()
                     engine.useClientMode = true
                     channelPipeline.addFirst("ssl", SslHandler(engine))
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
 
             override fun hasDisconnect(channelHandlerContext: ChannelHandlerContext) {
@@ -82,22 +82,40 @@ open class NettyClientHelper(val context: Context) {
 
     fun bind() {
         serverExecutor.execute {
+            ssl()
             Log.d(TAG, "start client bind!!!")
             udpHandler.stop()
             udpHandler.bind(Constant.UDP_SERVICE_PLATE_PORT)
         }
     }
 
-    fun ssl() {
-        serverExecutor.execute {
-            SecureChatSslContextFactory.getClientContextFromAssets(
-                context,
-                "bksclient.keystore",
-                "bksclient.keystore"
-            )
+    private fun ssl() {
+        SecureChatSslContextFactory.getClientContextFromAssets(
+            context,
+            "bksclient.keystore",
+            "bksclient.keystore"
+        )
+    }
+
+    @Throws(Exception::class)
+    fun send(str: String) {
+        tcpProtoBufClient.getChannelHandlerContext()?.let {
+            tcpProtoBufClient.send(handlerData(it, str))
+            return
+        }
+        throw Exception("tcp 连接 未初始化")
+    }
+
+    private fun handlerData(context: ChannelHandlerContext, str: String): ByteBuf {
+        val bytes = str.toByteArray(Charset.forName("utf-8"))
+        return context.alloc().buffer().apply {
+            writeBytes(bytes)
         }
     }
 
+    /**
+     * 宕机
+     */
     fun shutdown() {
         tcpProtoBufClient.disconnect()
         udpHandler.stop()

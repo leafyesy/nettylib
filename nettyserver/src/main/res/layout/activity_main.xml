@@ -16,6 +16,13 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+    <Button
+            android:text="点我发送测试数据"
+            android:id="@+id/click_to_send_data"
+            app:layout_constraintBottom_toTopOf="@+id/click_to_start_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
 
     <Button
             android:id="@+id/click_to_start_server"

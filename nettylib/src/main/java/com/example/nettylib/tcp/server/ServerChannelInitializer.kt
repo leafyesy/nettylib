@@ -2,8 +2,8 @@ package com.example.nettylib.tcp.server
 
 import com.example.nettylib.adapter.ConnectorIdleStateTrigger
 import com.example.nettylib.tcp.Config
-import com.example.nettylib.tcp.CustomProtobufDecoder
-import com.example.nettylib.tcp.CustomProtobufEncoder
+import com.example.nettylib.tcp.CustomProtoBufDecoder
+import com.example.nettylib.tcp.CustomProtoBufEncoder
 import com.google.protobuf.MessageLite
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
@@ -19,11 +19,11 @@ class ServerChannelInitializer(
     @Throws(Exception::class)
     override fun initChannel(socketChannel: SocketChannel) {
         val channelPipeline = socketChannel.pipeline()
-            .addLast(CustomProtobufEncoder())
+            .addLast(CustomProtoBufEncoder())
             .addLast(IdleStateHandler(Config.READ_IDLE_TIME, Config.WRITE_IDLE_TIME, 0, TimeUnit.SECONDS))
             .addLast(ConnectorIdleStateTrigger())
             .addLast(ServerConnectionHandler(serverChannelOperator))
-            .addLast(CustomProtobufDecoder(messageLite))
+            .addLast(CustomProtoBufDecoder(messageLite))
             .addLast(ServerDataHandler(serverChannelOperator))
         serverChannelOperator.handleChannelPipeline(channelPipeline)
     }

@@ -11,7 +11,6 @@ import com.google.protobuf.MessageLite
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPipeline
 import io.netty.handler.ssl.SslHandler
-import java.lang.Exception
 import java.util.concurrent.Executors
 
 class NettyServerHelper(private val context: Context) {

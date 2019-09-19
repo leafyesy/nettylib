@@ -7,6 +7,7 @@ import com.example.nettylib.tcp.client.ClientDataHandler
 import com.example.nettylib.tcp.client.idle.ConnectionWatchdog
 import com.google.protobuf.MessageLite
 import io.netty.bootstrap.Bootstrap
+import io.netty.buffer.ByteBuf
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
@@ -17,6 +18,8 @@ import io.netty.util.internal.logging.JdkLoggerFactory
 import java.util.concurrent.TimeUnit
 
 open class TcpProtoBufClient : ClientChannelOperator() {
+
+
     /**
      * 判断是否连接
      * @return
@@ -42,6 +45,11 @@ open class TcpProtoBufClient : ClientChannelOperator() {
         idleStateTrigger = ConnectorIdleStateTrigger()
     }
 
+    fun getChannelHandlerContext(): ChannelHandlerContext? {
+        return if (isConnect()) channelHandlerContext
+        else null
+    }
+
     /**
      * 连接
      * @param port      端口
@@ -53,9 +61,7 @@ open class TcpProtoBufClient : ClientChannelOperator() {
     fun connect(port: Int, host: String, prototype: MessageLite, autoReconnect: Boolean): ChannelFuture {
         if (group != null)
             throw Exception("不能重复连接")
-
         this.host = host
-
         group = NioEventLoopGroup()
         boot = Bootstrap().apply b@{
             this@b.group(group!!)
@@ -65,11 +71,11 @@ open class TcpProtoBufClient : ClientChannelOperator() {
                 override fun holdChannelPipeline(channelPipeline: ChannelPipeline) {
                     channelPipeline.addLast(
                         this,
-                        CustomProtobufEncoder(),
+                        CustomProtoBufEncoder(),
                         IdleStateHandler(Config.READ_IDLE_TIME, Config.WRITE_IDLE_TIME, 0, TimeUnit.SECONDS),
                         idleStateTrigger,
                         ClientConnectionHandler(this@TcpProtoBufClient),
-                        CustomProtobufDecoder(prototype),
+                        CustomProtoBufDecoder(prototype),
                         ClientDataHandler(this@TcpProtoBufClient)
                     )
                     handleChannelPipeline(channelPipeline)
@@ -135,5 +141,12 @@ open class TcpProtoBufClient : ClientChannelOperator() {
      */
     override fun send(messageLite: MessageLite): Future<*>? {
         return if (!isConnect()) null else channelHandlerContext!!.writeAndFlush(messageLite)
+    }
+
+    /**
+     * 发送byteBuf数据
+     */
+    override fun send(byteBuf: ByteBuf): Future<*>? {
+        return if (!isConnect()) null else channelHandlerContext!!.writeAndFlush(byteBuf)
     }
 }
