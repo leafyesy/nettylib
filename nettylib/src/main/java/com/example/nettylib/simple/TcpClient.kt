@@ -3,9 +3,12 @@ package com.example.nettylib.simple
 import android.text.TextUtils
 import android.util.Log
 import io.netty.bootstrap.Bootstrap
+import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
+import io.netty.util.CharsetUtil
 
 /**
  * Created by leafye on 2019-09-19.
@@ -56,7 +59,7 @@ class TcpClient {
             super.channelRead(ctx, msg)
             Log.d(TAG, ">>channelRead<<")
             msg ?: return
-            if (msg is String) {
+            if (msg is ByteBuf) {
                 Log.d(TAG, ">>read msg : $msg<<")
             }
         }
@@ -87,7 +90,8 @@ class TcpClient {
         if (TextUtils.isEmpty(s)) return
         ctx?.let {
             if (it.channel().isActive) {
-                it.writeAndFlush(s)
+                val copiedBuffer = Unpooled.copiedBuffer(s, CharsetUtil.UTF_8)
+                it.writeAndFlush(copiedBuffer)
                 Log.w(TAG, "客户端发送数据: $s")
             } else {
                 Log.w(TAG, "ChannelHandlerContext channel未链接")

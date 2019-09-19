@@ -3,6 +3,8 @@ package com.example.nettylib.simple
 import android.text.TextUtils
 import android.util.Log
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.channel.ChannelInitializer
@@ -10,6 +12,7 @@ import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.netty.util.CharsetUtil
 
 /**
  * Created by leafye on 2019-09-19.
@@ -57,19 +60,19 @@ class TcpServer {
         override fun channelActive(ctx: ChannelHandlerContext?) {
             super.channelActive(ctx)
             Log.d(TAG, ">>channelActive<<")
+            this@TcpServer.ctx = ctx
         }
 
         override fun channelInactive(ctx: ChannelHandlerContext?) {
             super.channelInactive(ctx)
             Log.d(TAG, ">>channelInactive<<")
-            this@TcpServer.ctx = ctx
         }
 
         override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
             super.channelRead(ctx, msg)
             Log.d(TAG, ">>channelRead<<")
             msg ?: return
-            if (msg is String) {
+            if (msg is ByteBuf) {
                 Log.d(TAG, ">>read msg : $msg<<")
             }
         }
@@ -104,7 +107,8 @@ class TcpServer {
         if (TextUtils.isEmpty(s)) return
         ctx?.let {
             if (it.channel().isActive) {
-                it.writeAndFlush(s)
+                val copiedBuffer = Unpooled.copiedBuffer(s, CharsetUtil.UTF_8)
+                it.writeAndFlush(copiedBuffer)
                 Log.w(TAG, "服务端发送数据: $s")
             } else {
                 Log.w(TAG, "ChannelHandlerContext channel未链接")
