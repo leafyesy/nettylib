@@ -25,7 +25,9 @@ class MainActivity : AppCompatActivity() {
 //        for (i in 0..999) {
 //            nettyHelper.send("这是测试数据 哈哈哈 <<>>")
 //        }
-        tcpClient.send("这是测试数据 哈哈哈")
+        (0..999).forEach { _ ->
+            tcpClient.send("这是测试数据 哈哈哈")
+        }
     }
 
     private fun startTcpService() {

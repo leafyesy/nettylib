@@ -33,7 +33,10 @@ class CustomProtoBufEncoder : MessageToByteEncoder<MessageLite>() {
         }
         val header = ByteArray(4)
         header[0] = (bodyLength and 0xff).toByte()
-        header[1] = (bodyLength.shr(8) and 0xff).toByte()
+        header[1] = (bodyLength.shr(8) and 0xff).toByte()//右移8位并进行与0xFF操作
+
+        //使用两个字节存储数据长度 第一个byte存储低8位数据 第二个byte存储高8位数据
+
         header[2] = 0 // 保留字段
         header[3] = messageType
         return header
