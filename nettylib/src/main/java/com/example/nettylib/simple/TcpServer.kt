@@ -2,9 +2,8 @@ package com.example.nettylib.simple
 
 import android.text.TextUtils
 import android.util.Log
-import com.example.nettylib.simple.decode.SimpleDecodeHandler
-import com.example.nettylib.simple.encode.SimpleEncodeHandler
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.channel.ChannelInitializer
@@ -12,6 +11,9 @@ import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.netty.handler.codec.LineBasedFrameDecoder
+import io.netty.handler.codec.string.LineEncoder
+import io.netty.util.CharsetUtil
 
 /**
  * Created by leafye on 2019-09-19.
@@ -45,8 +47,10 @@ class TcpServer {
                     p0 ?: return
                     Log.d(TAG, "服务端接受到channel处理数据")
                     val pipeline = p0.pipeline()
-                    pipeline.addLast(SimpleEncodeHandler())
-                    pipeline.addLast(SimpleDecodeHandler())
+                    pipeline.addLast(LineEncoder())
+                    pipeline.addLast(LineBasedFrameDecoder(Int.MAX_VALUE))
+//                    pipeline.addLast(SimpleEncodeHandler())
+//                    pipeline.addLast(SimpleDecodeHandler())
                     pipeline.addLast(MyChannelHandler())
                 }
             })
@@ -73,8 +77,15 @@ class TcpServer {
             super.channelRead(ctx, msg)
             Log.d(TAG, ">>channelRead<<")
             msg ?: return
-            if (msg is String) {
-                Log.d(TAG, ">>read msg : $msg<<")
+            when (msg) {
+                is String -> Log.d(TAG, ">>read msg : $msg<<")
+                is ByteBuf -> {
+                    val byteArray = ByteArray(msg.readableBytes())
+                    msg.readBytes(byteArray)
+                    val str = String(byteArray, CharsetUtil.UTF_8)
+                    Log.d(TAG, ">>read msg no String : $str<<")
+                }
+                else -> Log.d(TAG, ">>read msg no String : $msg<<")
             }
         }
 

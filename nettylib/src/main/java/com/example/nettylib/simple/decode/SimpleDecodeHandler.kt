@@ -13,7 +13,6 @@ class SimpleDecodeHandler : ByteToMessageDecoder() {
         p1 ?: return
         p2 ?: return
         val readableBytes = p1.readableBytes()
-        val size = p1.capacity()
         val byteArray = ByteArray(readableBytes)
         p1.readBytes(byteArray)
         val string = String(byteArray)

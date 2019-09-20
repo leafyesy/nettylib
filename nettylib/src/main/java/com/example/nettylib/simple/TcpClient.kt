@@ -2,12 +2,14 @@ package com.example.nettylib.simple
 
 import android.text.TextUtils
 import android.util.Log
-import com.example.nettylib.simple.decode.SimpleDecodeHandler
-import com.example.nettylib.simple.encode.SimpleEncodeHandler
 import io.netty.bootstrap.Bootstrap
+import io.netty.buffer.ByteBuf
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
+import io.netty.handler.codec.LineBasedFrameDecoder
+import io.netty.handler.codec.string.LineEncoder
+import io.netty.util.CharsetUtil
 
 /**
  * Created by leafye on 2019-09-19.
@@ -32,8 +34,12 @@ class TcpClient {
                 override fun initChannel(p0: Channel?) {
                     p0 ?: return
                     val pipeline = p0.pipeline()
-                    pipeline.addLast(SimpleEncodeHandler())
-                    pipeline.addLast(SimpleDecodeHandler())
+                    pipeline.addLast(LineEncoder())
+                    pipeline.addLast(
+                        LineBasedFrameDecoder(Int.MAX_VALUE)
+                    )
+//                    pipeline.addLast(SimpleEncodeHandler())
+//                    pipeline.addLast(SimpleDecodeHandler())
                     pipeline.addLast(MyChannelInboundHandlerAdapter())
                 }
             })
@@ -60,8 +66,15 @@ class TcpClient {
             super.channelRead(ctx, msg)
             Log.d(TAG, ">>channelRead<<")
             msg ?: return
-            if (msg is String) {
-                Log.d(TAG, ">>read msg : $msg<<")
+            when (msg) {
+                is String -> Log.d(TAG, ">>read msg : $msg<<")
+                is ByteBuf -> {
+                    val byteArray = ByteArray(msg.readableBytes())
+                    msg.readBytes(byteArray);
+                    val str = String(byteArray, CharsetUtil.UTF_8)
+                    Log.d(TAG, ">>read msg no String : $str<<")
+                }
+                else -> Log.d(TAG, ">>read msg no String : $msg<<")
             }
         }
 
