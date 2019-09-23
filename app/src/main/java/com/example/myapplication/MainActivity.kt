@@ -3,16 +3,13 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.extlib.onClick
-import com.example.nettylib.NettyClientHelper
-import com.example.nettylib.simple.TcpClient
+import com.example.myapplication.netty.SimpleNettyClientAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val nettyHelper by lazy { NettyClientHelper(this) }
-
-    private val tcpClient by lazy { TcpClient() }
+    private val nettyClientAdapter by lazy { SimpleNettyClientAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +23,12 @@ class MainActivity : AppCompatActivity() {
 //            nettyHelper.send("这是测试数据 哈哈哈 <<>>")
 //        }
         (0..9).forEach { _ ->
-            tcpClient.send("这是测试数据 哈哈哈")
+            nettyClientAdapter.send("这是测试数据 哈哈哈")
         }
     }
 
     private fun startTcpService() {
-        tcpClient.connect()
+        nettyClientAdapter.connect()
         //nettyHelper.bind()
     }
 }
