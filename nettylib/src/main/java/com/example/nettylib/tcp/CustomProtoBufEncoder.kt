@@ -15,11 +15,8 @@ class CustomProtoBufEncoder : MessageToByteEncoder<MessageLite>() {
 
     @Throws(Exception::class)
     override fun encode(ctx: ChannelHandlerContext, msg: MessageLite, out: ByteBuf) {
-
-
         val body = msg.toByteArray()
         val header = encodeHeader(msg, body.size)
-
         out.writeBytes(header)
         out.writeBytes(body)
     }

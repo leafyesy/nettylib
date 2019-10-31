@@ -34,6 +34,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     api 'com.android.support:multidex:1.0.3'
     api project(':extlib')
-    //api project(':nettylib')
-    api project(':ynettylib')
+    api project(':nettylib')
+//    api project(':ynettylib')
 }

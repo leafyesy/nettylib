@@ -6,7 +6,7 @@ import com.google.protobuf.MessageLite
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 
-class ClientDataHandler(private val clientChannelOperator: ClientChannelOperator?) :
+class ClientDataHandler(private val tcpClientOperator: ITcpClientOperator) :
     SimpleChannelInboundHandler<MessageLite>() {
 
     companion object {
@@ -16,7 +16,7 @@ class ClientDataHandler(private val clientChannelOperator: ClientChannelOperator
     @Throws(Exception::class)
     override fun channelRead0(ctx: ChannelHandlerContext, msg: MessageLite) {
         if (msg !is HeartBeatData.HeartBeat) {//不是心跳
-            clientChannelOperator?.onReadData(ctx, msg)
+            tcpClientOperator.channelRead0(ctx, msg)
         } else {
             Log.d(TAG, "心跳")
         }

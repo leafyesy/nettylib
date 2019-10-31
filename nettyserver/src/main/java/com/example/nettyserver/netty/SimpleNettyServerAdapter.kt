@@ -1,23 +1,31 @@
 package com.example.nettyserver.netty
 
-import com.example.nettylib.simple.TcpServer
+import com.example.nettylib.NettyServerHelper
+import com.example.nettyserver.MyApplication
 
 /**
  * Created by leafye on 2019-09-21.
  */
-class SimpleNettyServerAdapter:INettyServerAdapter{
+class SimpleNettyServerAdapter : INettyServerAdapter {
 
-    val tcpServer by lazy {
-        TcpServer()
-    }
-
-    override fun connect(){
-        tcpServer.connect()
+    val tcpProtobufServer: NettyServerHelper by lazy {
+        NettyServerHelper(MyApplication.getContext())
     }
 
 
-    override fun send(msg:String){
-        tcpServer.send(msg)
+//    val tcpServer by lazy {
+//        TcpServer()
+//    }
+
+    override fun connect() {
+        //tcpServer.connect()
+        tcpProtobufServer.bind()
+    }
+
+
+    override fun send(msg: String) {
+        //tcpServer.send(msg)
+        tcpProtobufServer.shutdown()
     }
 
 }
