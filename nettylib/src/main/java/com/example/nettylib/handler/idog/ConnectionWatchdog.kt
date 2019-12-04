@@ -1,9 +1,7 @@
-package com.example.nettylib.tcp.client.idle
+package com.example.nettylib.handler.idog
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.example.nettylib.ConnectOrRetryCallback
-import com.example.nettylib.IWatchDog
 import com.example.nettylib.operator.ProtoBufClientOperator
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
@@ -26,7 +24,8 @@ class ConnectionWatchdog(
     IWatchDog by watchDogImp {
 
     init {
-        watchDogImp.registerConnectOrRetryCallback(object : ConnectOrRetryCallback {
+        watchDogImp.registerConnectOrRetryCallback(object :
+            ConnectOrRetryCallback {
             override fun success(channel: Channel) {
                 clientOperator.onChannelReConnectedSuccess(channel)
             }

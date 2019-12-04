@@ -1,4 +1,4 @@
-package com.example.nettylib
+package com.example.nettylib.handler.idog
 
 import androidx.annotation.NonNull
 import io.netty.bootstrap.Bootstrap

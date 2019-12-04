@@ -1,9 +1,8 @@
-package com.example.nettylib.tcp.client.idle
+package com.example.nettylib.tcp.client
 
 import android.content.ContentValues
 import android.util.Log
-import com.example.nettylib.ConnectOrRetryCallback
-import com.example.nettylib.IWatchDog
+import com.example.nettylib.handler.idog.SimpleWatchDog
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.ChannelFuture
 import java.util.concurrent.TimeUnit
@@ -11,17 +10,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by leafye on 2019-12-05.
  */
-class TcpWahtchDogImp(
-    override var attempt: Int = 0,
-    override var connectMaxRetry: Int = IWatchDog.DEF_CONNECT_MAX_RETRY,
-    override var connectRetryInterval: Long = IWatchDog.DEF_CONNECT_RETRY_INTERVAL,
-    override var isReconnecting: Boolean = true
-) : IWatchDog {
-    private var callback: ConnectOrRetryCallback? = null
-
-    override fun registerConnectOrRetryCallback(c: ConnectOrRetryCallback) {
-        this.callback = c
-    }
+class TcpWatchDogImp : SimpleWatchDog() {
 
     override fun connectOrRetry(bootstrap: Bootstrap, host: String, port: Int, retry: Int) {
         attempt = connectMaxRetry - retry

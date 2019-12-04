@@ -1,4 +1,4 @@
-package com.example.nettylib.websocket.cliennt
+package com.example.nettylib.websocket.client
 
 import org.junit.Test
 

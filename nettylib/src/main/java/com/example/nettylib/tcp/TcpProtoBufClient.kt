@@ -6,8 +6,8 @@ import com.example.nettylib.proto.HeartBeatData
 import com.example.nettylib.tcp.client.ClientChannelOperator
 import com.example.nettylib.tcp.client.ClientConnectionHandler
 import com.example.nettylib.tcp.client.ClientDataHandler
-import com.example.nettylib.tcp.client.idle.ConnectionWatchdog
-import com.example.nettylib.tcp.client.idle.TcpWahtchDogImp
+import com.example.nettylib.handler.idog.ConnectionWatchdog
+import com.example.nettylib.tcp.client.TcpWatchDogImp
 import com.google.protobuf.MessageLite
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.*
@@ -27,7 +27,7 @@ open class TcpProtoBufClient : ClientChannelOperator() {
     private var channel: Channel? = null//tcp链接成功后的通道
 
     fun getChannelHandlerContext(): ChannelHandlerContext? = channelHandlerContext
-    
+
     /**
      * 连接
      * @param port      端口
@@ -51,7 +51,13 @@ open class TcpProtoBufClient : ClientChannelOperator() {
                 .option(ChannelOption.TCP_NODELAY, true)//tcp消息不延迟
                 .option(ChannelOption.SO_REUSEADDR, true)//端口复用
                 .option(ChannelOption.SO_KEEPALIVE, true)//保持链接
-            watchdog = ConnectionWatchdog(this@b, port, host, tcpClientOperator, TcpWahtchDogImp())
+            watchdog = ConnectionWatchdog(
+                this@b,
+                port,
+                host,
+                tcpClientOperator,
+                TcpWatchDogImp()
+            )
             this@b.handler(object : ChannelInitializer<Channel>() {
                 //初始化channel
                 @Throws(Exception::class)
@@ -74,7 +80,6 @@ open class TcpProtoBufClient : ClientChannelOperator() {
             })
         }
         watchdog?.reconnect()
-        //return boot!!.connect(host, port)
     }
 
 
