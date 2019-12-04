@@ -1,4 +1,4 @@
-package com.example.nettylib.tcp.client
+package com.example.nettylib.operator
 
 import com.google.protobuf.MessageLite
 import io.netty.channel.Channel
@@ -6,9 +6,9 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPipeline
 
 /**
- * Created by leafye on 2019-10-26.
+ * Created by leafye on 2019-11-28.
  */
-interface ITcpClientOperator {
+interface ProtoBufClientOperator {
     /**
      * 连接生效
      */
@@ -40,4 +40,3 @@ interface ITcpClientOperator {
     fun onChannelReConnectedSuccess(channel: Channel)
 
 }
-

@@ -3,17 +3,10 @@ package com.example.nettylib.tcp.client.idle
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.annotation.NonNull
-import com.example.nettylib.adapter.ConnectorIdleStateTrigger
-import com.example.nettylib.proto.HeartBeatData
+import com.example.nettylib.operator.ProtoBufClientOperator
 import com.example.nettylib.tcp.Config
-import com.example.nettylib.tcp.CustomProtoBufDecoder
-import com.example.nettylib.tcp.CustomProtoBufEncoder
-import com.example.nettylib.tcp.client.ClientConnectionHandler
-import com.example.nettylib.tcp.client.ClientDataHandler
-import com.example.nettylib.tcp.client.ITcpClientOperator
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.*
-import io.netty.handler.timeout.IdleStateHandler
 import java.util.concurrent.TimeUnit
 
 
@@ -25,7 +18,7 @@ abstract class ConnectionWatchdog(
     private val bootstrap: Bootstrap,
     private val port: Int,
     private val host: String,
-    private val tcpClientOperator: ITcpClientOperator
+    private val clientOperator: ProtoBufClientOperator
 ) :
     ChannelInboundHandlerAdapter(), ChannelHandlerHolder {
     /**
@@ -47,16 +40,16 @@ abstract class ConnectionWatchdog(
     }
 
     override fun holdChannelPipeline(channelPipeline: ChannelPipeline) {
-        channelPipeline.addLast(
-            this,
-            CustomProtoBufEncoder(),
-            IdleStateHandler(Config.READ_IDLE_TIME, Config.WRITE_IDLE_TIME, 0, TimeUnit.SECONDS),
-            ConnectorIdleStateTrigger(),
-            ClientConnectionHandler(tcpClientOperator),
-            CustomProtoBufDecoder(HeartBeatData.HeartBeat.getDefaultInstance()),
-            ClientDataHandler(tcpClientOperator)
-        )
-        tcpClientOperator.handleChannelPipeline(channelPipeline)
+//        channelPipeline.addLast(
+//            this,
+//            CustomProtoBufEncoder(),
+//            IdleStateHandler(Config.READ_IDLE_TIME, Config.WRITE_IDLE_TIME, 0, TimeUnit.SECONDS),
+//            ConnectorIdleStateTrigger(),
+//            ClientConnectionHandler(clientOperator),
+//            CustomProtoBufDecoder(HeartBeatData.HeartBeat.getDefaultInstance()),
+//            ClientDataHandler(clientOperator)
+//        )
+        clientOperator.handleChannelPipeline(channelPipeline)
     }
 
     /**
@@ -64,7 +57,7 @@ abstract class ConnectionWatchdog(
      */
     @Throws(Exception::class)
     override fun channelActive(ctx: ChannelHandlerContext) {
-        println("当前链路已经激活了，重连尝试次数重新置为0")
+        println("当前链路已经激活了，重连尝试次数重新置为0  old.attempts:$attempts")
         if (attempts == 0)
             ctx.fireChannelActive()
         attempts = 0
@@ -80,7 +73,6 @@ abstract class ConnectionWatchdog(
             ctx.fireChannelInactive()
         }
     }
-
 
     fun reconnect() {
         if (isReconnecting) {
@@ -107,7 +99,7 @@ abstract class ConnectionWatchdog(
         @NonNull bootstrap: Bootstrap, @NonNull host: String, port: Int,
         retry: Int
     ) {
-        attempts = CONNECT_MAX_RETRY - retry + 1
+        attempts = CONNECT_MAX_RETRY - retry
         Log.e(TAG, "第${attempts}次重连, 间隔延迟: $CONNECT_RETRY_INTERVAL 秒!")
         bootstrap.connect(host, port).addListener { future ->
             if (future is ChannelFuture)
@@ -117,7 +109,7 @@ abstract class ConnectionWatchdog(
                         Log.d(TAG, "连接成功!")
                         isReconnecting = false
                         future.channel()?.apply {
-                            tcpClientOperator.onChannelReConnectedSuccess(this)
+                            clientOperator.onChannelReConnectedSuccess(this)
                         }
                     }
                     retry == 0 -> {
@@ -125,7 +117,7 @@ abstract class ConnectionWatchdog(
                         // 关闭客户端, 释放资源
                         // 连接服务器失败回调
                         isReconnecting = false
-                        tcpClientOperator.onChannelReConnectedFailed()
+                        clientOperator.onChannelReConnectedFailed()
                     }
                     else -> {
                         // 第几次重连

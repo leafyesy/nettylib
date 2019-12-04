@@ -15,6 +15,7 @@ class ServerDataHandler(private val serverChannelOperator: ServerChannelOperator
 
     @Throws(Exception::class)
     override fun channelRead0(ctx: ChannelHandlerContext, msg: MessageLite) {
+        Log.i("ServerDataHandler", "msg:$msg")
         if (msg !is HeartBeatData.HeartBeat) {
             //不是心跳
             serverChannelOperator?.onReadData(ctx, msg)

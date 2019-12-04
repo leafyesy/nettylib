@@ -24,8 +24,8 @@ class SimpleNettyServerAdapter : INettyServerAdapter {
 
 
     override fun send(msg: String) {
-        //tcpServer.send(msg)
-        tcpProtobufServer.shutdown()
+//        tcpProtobufServer.send(msg)
+        //tcpProtobufServer.shutdown()
     }
 
 }

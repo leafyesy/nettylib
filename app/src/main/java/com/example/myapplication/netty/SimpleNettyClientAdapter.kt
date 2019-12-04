@@ -21,7 +21,8 @@ class SimpleNettyClientAdapter : INettyClientAdapter {
     }
 
     override fun send(msg: String) {
-        nettyClientHelper.shutdown()
+        //nettyClientHelper.shutdown()
+        nettyClientHelper.send(msg)
         //tcpClient.send(msg)
     }
 

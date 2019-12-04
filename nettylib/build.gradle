@@ -62,11 +62,11 @@ protobuf {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api 'androidx.appcompat:appcompat:1.0.2'
+    api 'androidx.appcompat:appcompat:1.1.0'
     testApi 'junit:junit:4.12'
     androidTestApi 'androidx.test:runner:1.2.0'
     androidTestApi 'androidx.test.espresso:espresso-core:3.2.0'
-    api 'com.google.protobuf:protobuf-java:3.1.0'
+    api 'com.google.protobuf:protobuf-java:3.4.0'
     api 'com.google.protobuf:protoc:3.1.0'
-    api files('libs/netty-all-4.1.31.Final.jar')
+    //api files('libs/netty-all-4.1.31.Final.jar')
 }

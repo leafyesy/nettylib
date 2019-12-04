@@ -84,7 +84,7 @@ open class UdpHandler : DataOperator {
         if (!TextUtils.isEmpty(routeBroadcastAddress)) {
             broadcastAddr = routeBroadcastAddress
         }
-        Log.d(TAG, "broadcastAddr:$broadcastAddr")
+        Log.d(TAG, "data:$data + broadcastAddr:$broadcastAddr")
         val datagramPacket = DatagramPacket(
             wrappedBuffer(newData!!.toByteArray()),
             SocketUtils.socketAddress(broadcastAddr, port)

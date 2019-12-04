@@ -1,11 +1,10 @@
 package com.example.nettylib.tcp
 
+import com.example.nettylib.operator.ProtoBufClientOperator
 import com.example.nettylib.tcp.client.ClientChannelOperator
-import com.example.nettylib.tcp.client.ITcpClientOperator
 import com.example.nettylib.tcp.client.idle.ConnectionWatchdog
 import com.google.protobuf.MessageLite
 import io.netty.bootstrap.Bootstrap
-import io.netty.buffer.ByteBuf
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
@@ -65,8 +64,8 @@ open class TcpProtoBufClient : ClientChannelOperator() {
     }
 
 
-    private val tcpClientOperator: ITcpClientOperator by lazy {
-        object : ITcpClientOperator {
+    private val tcpClientOperator: ProtoBufClientOperator by lazy {
+        object : ProtoBufClientOperator {
             override fun onChannelReConnectedFailed() {
                 //关闭链接 释放资源
                 //重连失败
@@ -154,7 +153,7 @@ open class TcpProtoBufClient : ClientChannelOperator() {
     /**
      * 发送byteBuf数据
      */
-    override fun send(byteBuf: ByteBuf): Future<*>? {
+    override fun send(byteBuf: Any): Future<*>? {
         return if (!isConnect()) null else channelHandlerContext?.writeAndFlush(byteBuf)
     }
 }
