@@ -48,19 +48,18 @@ open class WebSocketProtoBufClient : ClientChannelOperator() {
         host: String
         //prototype: MessageLite
     ) {
-        if (group != null) {
-            Log.w(TAG, "已经绑定了...")
-            return;
-            //throw Exception("不能重复连接")
+        if (watchdog?.isReconnecting == true) {
+            Log.w(TAG, "重连中...")
+            return
         }
         val target = "ws://$host:$port/websocket"
         Log.d(TAG, "target:$target")
         val uri = URI(target)
-        if (group != null)
-            throw Exception("不能重复连接")
         handler = WebSocketClientHandler(uri)
-
         this.host = host
+        if (group != null) {
+            group?.shutdownGracefully()
+        }
         group = NioEventLoopGroup()
         boot = Bootstrap().apply b@{
             this@b.group(group!!)
@@ -80,7 +79,6 @@ open class WebSocketProtoBufClient : ClientChannelOperator() {
                             HttpClientCodec(),
                             HttpObjectAggregator(8192),
                             WebSocketClientCompressionHandler.INSTANCE
-                            //ClientConnectionHandler(clientOperator)
                         )
                         addLast("decode", CustomMessageToMessageDecoder())
                         addLast("encode", CustomMessageToMessageEncoder())
@@ -90,18 +88,9 @@ open class WebSocketProtoBufClient : ClientChannelOperator() {
             })
         }
         watchdog?.reconnect()
-//        Log.d(TAG, "开始请求!!")
-//        ch = boot?.connect(host, port)?.sync()?.channel()
-//        Log.d(TAG, "链接成功!!")
-//        handler?.handshakeFuture()?.sync()
-//        Log.d(TAG, "handshakeFuture 成功!!")
     }
 
     var ch: Channel? = null
-
-    fun isNeedReConnect(host: String, port: Int) {
-
-    }
 
     private val clientOperator: ProtoBufClientOperator by lazy {
         object : ProtoBufClientOperator {

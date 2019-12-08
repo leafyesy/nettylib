@@ -9,7 +9,7 @@ open class SimpleWatchDog(
     override var attempt: Int = 0,
     override var connectMaxRetry: Int = IWatchDog.DEF_CONNECT_MAX_RETRY,
     override var connectRetryInterval: Long = IWatchDog.DEF_CONNECT_RETRY_INTERVAL,
-    override var isReconnecting: Boolean = true
+    override var isReconnecting: Boolean = false
 ) : IWatchDog {
 
     protected var callback: ConnectOrRetryCallback? = null
@@ -17,6 +17,7 @@ open class SimpleWatchDog(
     override fun registerConnectOrRetryCallback(c: ConnectOrRetryCallback) {
         this.callback = c
     }
+
     override fun connectOrRetry(bootstrap: Bootstrap, host: String, port: Int, retry: Int) {
 
     }

@@ -7,10 +7,11 @@ import io.netty.channel.ChannelInitializer
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
-import io.netty.handler.codec.http.DefaultHttpHeaders
 import io.netty.handler.codec.http.HttpClientCodec
 import io.netty.handler.codec.http.HttpObjectAggregator
-import io.netty.handler.codec.http.websocketx.*
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler
 import io.netty.handler.ssl.SslContext
 import io.netty.handler.ssl.SslContextBuilder
@@ -66,12 +67,7 @@ object WebSocketClient {
             // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
             // If you change it to V00, ping is not supported and remember to change
             // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
-            val handler = WebSocketClientHandler(
-                WebSocketClientHandshakerFactory.newHandshaker(
-                    uri, WebSocketVersion.V13, null, true, DefaultHttpHeaders()
-                )
-            )
-
+            val handler = WebSocketClientHandler(uri)
             val b = Bootstrap()
             b.group(group)
                 .channel(NioSocketChannel::class.java)

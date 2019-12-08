@@ -87,13 +87,11 @@ open class TcpProtoBufClient : ClientChannelOperator() {
 
     }
 
-
     private val tcpClientOperator: ProtoBufClientOperator by lazy {
         object : ProtoBufClientOperator {
             override fun onChannelReConnectedFailed() {
                 //关闭链接 释放资源
                 //重连失败
-
             }
 
             override fun onChannelReConnectedSuccess(channel: Channel) {
